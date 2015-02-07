@@ -3,7 +3,7 @@ package main
 import "fmt"
 import "runtime"
 
-const msize int = 100000
+const msize int = 100
 
 func sum(a []int, c chan int, v chan int) {
     total := 0
@@ -18,20 +18,20 @@ func sum(a []int, c chan int, v chan int) {
 
 func main() {
 
-    cpu := runtime.NumCPU()
-    fmt.Printf("cpu : %v\n", cpu)
+    cpunum := runtime.NumCPU()
+    fmt.Printf("cpunum : %v\n", cpunum)
     runtime.GOMAXPROCS(runtime.NumCPU())
     var a [msize]int
     l := len(a)
     for i := 0; i < l; i++ {
         a[i] = 1;
     }
-    c := make(chan int, 5)
+    c := make(chan int, cpunum)
     v := make(chan int)
-    ofs := len(a)/cpu
+    ofs := len(a)/cpunum
 
     s, e := 0, 0
-    for i := 0; i < cpu; i++ {
+    for i := 0; i < cpunum; i++ {
         s = ofs * i
         e = s + ofs
         fmt.Println(s, e)
@@ -39,7 +39,7 @@ func main() {
     }
     vcnt := 0
     total := 0
-    for vcnt != cpu {
+    for vcnt != cpunum {
         total += <-c
         vcnt += <-v
     }
