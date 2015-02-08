@@ -2,38 +2,59 @@ package main
 
 import (
     "log"
-    //"math/rand"
+    "math/rand"
     "net"
     "runtime"
-    //"time"
+    "time"
     "strings"
+    "flag"
+    "fmt"
+    "os"
+)
+
+const (
+    num_child = 10 
 )
 
 func main() {
+    var p = flag.Int("p", 12345, "port number.")
+    flag.Parse()
+
+    // argc
+    if flag.NArg() > 0 {
+        fmt.Fprintf(os.Stderr,"error:illegale args.\n")
+        os.Exit(1)
+    }
+    port := *p 
+
     cpunum := runtime.NumCPU()
     log.Printf("cpu : %v\n", cpunum)
+    log.Printf("port : %d\n", port)
     runtime.GOMAXPROCS(cpunum)
 
-    service := ":12345"
+    service := fmt.Sprintf(":%d", port)
     tcpAddr, err := net.ResolveTCPAddr("tcp4", service);
     listener, err := net.ListenTCP("tcp", tcpAddr);
+    checkError(err)
 
-    if err != nil {
-        log.Fatalln(err)
+    for i := 0; i < num_child; i++ {
+        go accept(listener)
     }
+    for {
+        time.Sleep(time.Duration(rand.Intn(3)) * time.Second)
+    }
+}
 
+func accept(listener *net.TCPListener) {
     for {
         conn, err := listener.Accept()
-
         if err != nil {
             log.Printf("Accept Error:%v\n", err)
-            continue
+            return
         }
-
-        log.Printf("Accept[%v]\n", conn.RemoteAddr())
-
         go doProcess(conn)
     }
+    return
 }
 
 func doProcess(conn net.Conn) {
@@ -79,5 +100,12 @@ func doProcess(conn net.Conn) {
         }
     }
 
+}
+
+func checkError(err error) {
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Fatal error: %s", err.Error())
+        os.Exit(1)
+    }
 }
 
