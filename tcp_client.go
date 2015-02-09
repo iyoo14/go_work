@@ -1,6 +1,7 @@
 package main
 
 import (
+    "bufio"
     "fmt"
     //"io/ioutil"
     "net"
@@ -28,7 +29,11 @@ func main() {
     checkError(err)
     conn, err := net.DialTCP("tcp", nil, tcpAddr)
     checkError(err)
-    _, err = conn.Write([]byte("HEAD / HTTP/1.0\r\n\r\n"))
+
+    scanner := bufio.NewScanner(os.Stdin)
+    scanner.Scan()
+    val := scanner.Text()
+    _, err = conn.Write([]byte(val))
     checkError(err)
 
     buf := make([]byte, 1024)
@@ -38,7 +43,7 @@ func main() {
     checkError(err)
     //fmt.Println(string(buf[:rlen]))
     fmt.Println(rlen)
-    fmt.Println(string(buf))
+    fmt.Printf("> %s", string(buf))
     os.Exit(0)
 }
 
