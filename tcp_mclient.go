@@ -17,10 +17,10 @@ const (
 type Node struct {
     msg chan string
     conn *net.TCPConn
-    rcv chan bool
+    fin chan bool
 }
 
-func disp(n Node) {
+func sendrecv(n Node) {
    val := <- n.msg
    conn := n.conn
    _, err := conn.Write([]byte(val))
@@ -34,7 +34,7 @@ func disp(n Node) {
    //fmt.Println(string(buf[:rlen]))
    fmt.Printf("> %s", string(buf))
 
-   n.rcv <- true
+   n.fin <- true
 }
 
 func main() {
@@ -48,15 +48,17 @@ func main() {
         checkError(err)
         nodes[i].conn = conn
         nodes[i].msg = make(chan string) 
-        nodes[i].rcv = make(chan bool)
+        nodes[i].fin = make(chan bool)
     }
     for _, n := range nodes {
-        go disp(n)
+        go sendrecv(n)
     }
     for i, n := range nodes {
        str := fmt.Sprintf("%s:%d", "hello! localhost", mport+i)
        n.msg <- str
-       <- n.rcv 
+    }
+    for _, n := range nodes {
+        <-n.fin
     }
     os.Exit(0)
 }
