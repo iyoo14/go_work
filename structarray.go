@@ -14,20 +14,26 @@ type Node struct {
     rcv chan bool
 }
 
-func disp(n Node) {
-   m := <- n.msg
-   fmt.Println(m)
-   n.rcv <- true
+func disp(n *Node) {
+     m := <- n.msg
+     fmt.Println(m)
+     n.port += 10
+     n.rcv <- true
 }
 
 func main() {
 
-    var nodes [cnum]Node
+    var nodes []*Node = make([]*Node, cnum)
     mport := 55550
     for i, _ := range nodes {
-        nodes[i].msg = make(chan string) 
-        nodes[i].port = mport + i
-        nodes[i].rcv = make(chan bool)
+        p := new(Node)
+        p.msg = make(chan string)
+        p.port = mport + i
+        p.rcv = make(chan bool)
+        nodes[i] = p
+        //nodes[i].msg = make(chan string) 
+        //nodes[i].port = mport + i
+        //nodes[i].rcv = make(chan bool)
     }
     fmt.Println("disp")
     for _, n := range nodes {
@@ -38,5 +44,8 @@ func main() {
        str := fmt.Sprintf("msg:%d",n.port)
        n.msg <- str
        <- n.rcv 
+    }
+    for i, _ := range nodes {
+        fmt.Println(nodes[i].port)
     }
 }
