@@ -10,5 +10,7 @@ func main() {
 
     i = &n
     fmt.Println(*i)
+    v := []interface{}{"a", "b", "c"}
+    fmt.Printf("%s - %s -%s\n",v...) 
 }
 

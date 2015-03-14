@@ -34,12 +34,14 @@ func main() {
     for i := 0; i < cpunum; i++ {
         s = ofs * i
         e = s + ofs
-        fmt.Println(s, e)
+        //fmt.Println(s, e)
         go sum(a[s:e], c, v)
     }
     vcnt := 0
     total := 0
-    for vcnt != cpunum {
+    //for vcnt != cpunum {
+    for i := 0; i < cpunum; i++ {
+        fmt.Println(vcnt)
         total += <-c
         vcnt += <-v
     }

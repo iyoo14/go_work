@@ -23,7 +23,7 @@ func main() {
     }
 
     for {
-        conn, err := listener.Accept()
+        conn, err := listener.AcceptTCP()
 
         if err != nil {
             log.Printf("Accept Error:%v\n", err)
