@@ -8,8 +8,8 @@ type Ml struct {
    id int
 }
 
-func NewMl()(Ml){
-    return Ml{5}
+func NewMl()(*Ml){
+    return new(Ml) 
 }
 
 func (m *Ml) Back() {

@@ -14,7 +14,7 @@ var instance *sng
 func GetInstance() (*sng){
     if instance == nil {
         fmt.Println("nil")
-        m := new(Ml)
+        m := NewMl()
         m.id = 4
         instance = &sng{m, "rat"}
     }
