@@ -5,19 +5,19 @@ import (
     )
 
 type Ml struct {
-        id int
+   id int
 }
 
 func NewMl()(Ml){
     return Ml{5}
 }
 
-func (m Ml) Back() {
-    m.id = m.id-1
+func (m *Ml) Back() {
+    m.id--
     fmt.Println(m.id)
 }
 
-func (m Ml) Disp() {
+func (m *Ml) Disp() {
     fmt.Printf("now id is %d\n", m.id)
 }
 

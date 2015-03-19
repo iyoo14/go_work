@@ -15,7 +15,7 @@ func GetInstance() (*sng){
     if instance == nil {
         fmt.Println("nil")
         m := new(Ml)
-        m.id = 5
+        m.id = 4
         instance = &sng{m, "rat"}
     }
     instance.M.Disp()

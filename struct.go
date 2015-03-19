@@ -18,15 +18,15 @@ func (p parent) common() {
     fmt.Println(p.pid)
 }
 
-func (c child) doSomething() {
+func (c *child) doSomething() {
     c.common()
 }
 
-func (c child)disp() {
+func (c *child)disp() {
     fmt.Println(c.id)
 }
 
-func (c child)cal() {
+func (c *child)cal() {
     c.id++
     fmt.Println(c.id)
 }
