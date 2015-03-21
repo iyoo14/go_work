@@ -1,0 +1,7 @@
+{
+    "host":"cent11",
+    "dbname":"godbtest",
+    "user":"iyo",
+    "password":"certate",
+    "sslmode":"disable"
+}
